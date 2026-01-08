@@ -154,7 +154,7 @@ const AddEvent = () => {
           <LineaButton
             variant="ghost"
             size="icon"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/timeline')}
           >
             <ArrowLeft className="w-5 h-5" />
           </LineaButton>
