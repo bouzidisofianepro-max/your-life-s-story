@@ -104,6 +104,20 @@ const AddEvent = () => {
                 <span className="font-medium text-foreground">Ajouter une vidéo</span>
                 <span className="text-xs text-muted-foreground">Max 60 secondes</span>
               </motion.button>
+
+              <motion.button
+                className="w-full p-6 rounded-2xl border-2 border-dashed border-border hover:border-primary/40 hover:bg-accent/30 transition-all flex flex-col items-center gap-3"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="w-14 h-14 rounded-full bg-linea-lavender-soft flex items-center justify-center">
+                  <svg className="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                  </svg>
+                </div>
+                <span className="font-medium text-foreground">Ajouter un audio</span>
+                <span className="text-xs text-muted-foreground">Message vocal, musique...</span>
+              </motion.button>
             </div>
 
             {/* Action buttons */}
