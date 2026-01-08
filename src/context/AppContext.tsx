@@ -10,6 +10,8 @@ interface AppContextType {
   deleteEvent: (id: string) => void;
   isOnboarded: boolean;
   setIsOnboarded: (value: boolean) => void;
+  timelineName: string;
+  setTimelineName: (name: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -18,6 +20,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [events, setEvents] = useState<TimelineEvent[]>([]);
   const [isOnboarded, setIsOnboarded] = useState(false);
+  const [timelineName, setTimelineName] = useState('Ma frise');
 
   const addEvent = (event: TimelineEvent) => {
     setEvents((prev) => [...prev, event].sort((a, b) => 
@@ -46,6 +49,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         deleteEvent,
         isOnboarded,
         setIsOnboarded,
+        timelineName,
+        setTimelineName,
       }}
     >
       {children}

@@ -1,17 +1,21 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Settings, User } from 'lucide-react';
+import { Plus, Settings, Pencil, Check } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { LineaButton } from '@/components/ui/linea-button';
 import TimelineView from '@/components/timeline/TimelineView';
 import EmptyTimeline from '@/components/timeline/EmptyTimeline';
 import { TimelineEvent } from '@/types/linea';
+import { Input } from '@/components/ui/input';
 
 const Timeline = () => {
   const navigate = useNavigate();
-  const { events, user } = useApp();
+  const { events, timelineName, setTimelineName } = useApp();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState(timelineName);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleAddEvent = () => {
     navigate('/add-event');
@@ -23,6 +27,37 @@ const Timeline = () => {
 
   // Show success message if just added first event
   const justAddedFirst = events.length === 1 && !showSuccessMessage;
+
+  useEffect(() => {
+    if (isEditingName && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditingName]);
+
+  const handleStartEditing = () => {
+    setTempName(timelineName);
+    setIsEditingName(true);
+  };
+
+  const handleSaveName = () => {
+    const trimmedName = tempName.trim();
+    if (trimmedName) {
+      setTimelineName(trimmedName);
+    } else {
+      setTempName(timelineName);
+    }
+    setIsEditingName(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSaveName();
+    } else if (e.key === 'Escape') {
+      setTempName(timelineName);
+      setIsEditingName(false);
+    }
+  };
 
   return (
     <div className="min-h-screen gradient-warm">
@@ -50,9 +85,27 @@ const Timeline = () => {
                 />
               </svg>
             </div>
-            <h1 className="font-display text-xl font-semibold text-foreground">
-              Ma frise
-            </h1>
+            {isEditingName ? (
+              <Input
+                ref={inputRef}
+                value={tempName}
+                onChange={(e) => setTempName(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onBlur={handleSaveName}
+                className="font-display text-xl font-semibold h-10 w-48"
+                placeholder="Nom de la frise"
+              />
+            ) : (
+              <button
+                onClick={handleStartEditing}
+                className="flex items-center gap-2 group"
+              >
+                <h1 className="font-display text-xl font-semibold text-foreground">
+                  {timelineName}
+                </h1>
+                <Pencil className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+              </button>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
