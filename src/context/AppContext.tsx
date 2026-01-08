@@ -127,7 +127,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const addEvent = (event: TimelineEvent) => {
     setEvents((prev) => [...prev, event].sort((a, b) => 
-      new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+      new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
     ));
   };
 
