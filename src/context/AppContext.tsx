@@ -20,7 +20,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [events, setEvents] = useState<TimelineEvent[]>([]);
   const [isOnboarded, setIsOnboarded] = useState(false);
-  const [timelineName, setTimelineName] = useState('Ma frise');
+  const [timelineName, setTimelineName] = useState('La famille');
 
   const addEvent = (event: TimelineEvent) => {
     setEvents((prev) => [...prev, event].sort((a, b) => 
