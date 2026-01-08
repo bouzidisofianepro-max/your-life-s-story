@@ -17,7 +17,7 @@ const TimelineView = ({ events, onEventClick }: TimelineViewProps) => {
     return acc;
   }, {} as Record<number, TimelineEvent[]>);
 
-  const years = Object.keys(eventsByYear).map(Number).sort((a, b) => b - a);
+  const years = Object.keys(eventsByYear).map(Number).sort((a, b) => a - b);
 
   return (
     <div className="relative">
