@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Settings, Pencil, Check } from 'lucide-react';
+import { Plus, Settings, Pencil, ChevronDown } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { LineaButton } from '@/components/ui/linea-button';
 import TimelineView from '@/components/timeline/TimelineView';
@@ -15,7 +15,11 @@ const Timeline = () => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState(timelineName);
+  const [showScrollHint, setShowScrollHint] = useState(true);
+  const [showReturnButton, setShowReturnButton] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
+  const todayRef = useRef<HTMLDivElement>(null);
 
   const handleAddEvent = () => {
     navigate('/add-event');
@@ -27,6 +31,48 @@ const Timeline = () => {
 
   // Show success message if just added first event
   const justAddedFirst = events.length === 1 && !showSuccessMessage;
+
+  // Scroll to today (bottom) on initial load
+  useEffect(() => {
+    if (events.length > 0 && todayRef.current) {
+      setTimeout(() => {
+        todayRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' });
+      }, 100);
+    }
+  }, []);
+
+  // Hide scroll hint after first scroll or after delay
+  useEffect(() => {
+    const hideHint = () => {
+      setShowScrollHint(false);
+    };
+    
+    const timer = setTimeout(hideHint, 5000);
+    window.addEventListener('scroll', hideHint, { once: true });
+    
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', hideHint);
+    };
+  }, []);
+
+  // Show/hide return to today button based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      if (todayRef.current) {
+        const rect = todayRef.current.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        setShowReturnButton(!isVisible);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToToday = () => {
+    todayRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  };
 
   useEffect(() => {
     if (isEditingName && inputRef.current) {
@@ -60,7 +106,7 @@ const Timeline = () => {
   };
 
   return (
-    <div className="min-h-screen gradient-warm">
+    <div className="min-h-screen gradient-warm" ref={mainRef}>
       {/* Header */}
       <motion.header
         className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50"
@@ -120,6 +166,23 @@ const Timeline = () => {
         </div>
       </motion.header>
 
+      {/* Scroll hint - first time only */}
+      <AnimatePresence>
+        {showScrollHint && events.length > 0 && (
+          <motion.div
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-40"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="px-4 py-2 rounded-full bg-foreground/80 backdrop-blur-sm text-background text-sm font-medium shadow-elevated">
+              ↑ Remontez pour explorer le passé
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Main content */}
       <main className="max-w-2xl mx-auto px-4 py-6">
         <AnimatePresence mode="wait">
@@ -148,32 +211,61 @@ const Timeline = () => {
 
               <TimelineView events={events} onEventClick={handleEventClick} />
 
-              {/* Add more events prompt */}
-              <motion.div
-                className="mt-8 flex flex-col items-center gap-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              >
-                <LineaButton
-                  variant="soft"
-                  size="lg"
-                  onClick={handleAddEvent}
-                  className="gap-2"
-                >
-                  <Plus className="w-5 h-5" />
-                  Ajouter un autre événement
-                </LineaButton>
-              </motion.div>
+              {/* Today marker / Future space */}
+              <div ref={todayRef} className="pt-8 pb-32">
+                <div className="flex flex-col items-center gap-4">
+                  {/* Future space visual */}
+                  <div className="w-[2px] h-16 bg-gradient-to-b from-primary/20 to-transparent" />
+                  
+                  <motion.div
+                    className="text-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <p className="text-sm text-muted-foreground mb-4">
+                      L'histoire continue...
+                    </p>
+                    <LineaButton
+                      variant="soft"
+                      size="lg"
+                      onClick={handleAddEvent}
+                      className="gap-2"
+                    >
+                      <Plus className="w-5 h-5" />
+                      Ajouter un événement
+                    </LineaButton>
+                  </motion.div>
+                </div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
       </main>
 
-      {/* Floating add button (when there are events) */}
+      {/* Return to today button */}
+      <AnimatePresence>
+        {showReturnButton && events.length > 0 && (
+          <motion.button
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 px-4 py-2.5 rounded-full bg-foreground/90 backdrop-blur-sm text-background text-sm font-medium shadow-elevated hover:bg-foreground transition-colors"
+            onClick={scrollToToday}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <ChevronDown className="w-4 h-4" />
+            Retour au présent
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Floating add button */}
       {events.length > 0 && (
         <motion.div
-          className="fixed bottom-6 right-6"
+          className="fixed bottom-6 right-6 z-50"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 0.5 }}
