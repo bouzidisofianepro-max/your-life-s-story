@@ -106,17 +106,24 @@ const Timeline = () => {
   };
 
   return (
-    <div className="min-h-screen gradient-warm" ref={mainRef}>
+    <div className="min-h-screen gradient-premium texture-noise" ref={mainRef}>
+      {/* Premium background effects */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-primary/3 to-transparent" />
+        <div className="absolute top-40 right-0 w-96 h-96 rounded-full bg-primary/5 blur-[120px]" />
+        <div className="absolute bottom-40 left-0 w-80 h-80 rounded-full bg-linea-rose/5 blur-[100px]" />
+      </div>
+
       {/* Header */}
       <motion.header
-        className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50"
+        className="sticky top-0 z-50 glass-strong"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center">
+            <div className="w-11 h-11 rounded-2xl gradient-primary shadow-soft flex items-center justify-center">
               <svg
                 className="w-5 h-5 text-primary-foreground"
                 fill="none"
