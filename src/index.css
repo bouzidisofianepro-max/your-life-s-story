@@ -1,120 +1,130 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Linéa Design System - Calm, Emotional, Minimal */
+/* Linéa Design System - Beige, Warm, Timeless */
 
 @layer base {
   :root {
-    /* Warm, inviting palette */
-    --background: 40 30% 98%;
-    --foreground: 25 20% 15%;
+    /* Warm beige palette - sable, lin, ivoire */
+    --background: 35 30% 96%;
+    --foreground: 25 25% 18%;
 
-    --card: 40 25% 97%;
-    --card-foreground: 25 20% 15%;
+    --card: 35 25% 94%;
+    --card-foreground: 25 25% 18%;
 
-    --popover: 40 30% 99%;
-    --popover-foreground: 25 20% 15%;
+    --popover: 35 30% 97%;
+    --popover-foreground: 25 25% 18%;
 
-    /* Soft lavender accent - emotional, calming */
-    --primary: 270 40% 60%;
-    --primary-foreground: 0 0% 100%;
+    /* Warm brown accent - discret, naturel */
+    --primary: 25 35% 45%;
+    --primary-foreground: 35 30% 97%;
 
-    --secondary: 40 20% 94%;
-    --secondary-foreground: 25 20% 25%;
+    --secondary: 35 20% 90%;
+    --secondary-foreground: 25 25% 25%;
 
-    --muted: 40 15% 92%;
-    --muted-foreground: 25 10% 45%;
+    --muted: 35 15% 88%;
+    --muted-foreground: 25 15% 45%;
 
-    --accent: 270 35% 95%;
-    --accent-foreground: 270 40% 40%;
+    --accent: 35 25% 92%;
+    --accent-foreground: 25 35% 35%;
 
-    --destructive: 0 65% 55%;
+    --destructive: 0 55% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 40 20% 88%;
-    --input: 40 20% 90%;
-    --ring: 270 40% 60%;
+    --border: 35 20% 85%;
+    --input: 35 20% 88%;
+    --ring: 25 35% 45%;
 
     --radius: 1rem;
 
-    /* Custom Linéa tokens */
-    --linea-cream: 40 30% 96%;
-    --linea-lavender: 270 40% 60%;
-    --linea-lavender-soft: 270 35% 92%;
-    --linea-rose: 350 45% 65%;
-    --linea-sage: 150 25% 55%;
-    --linea-amber: 35 80% 55%;
-    --linea-sky: 200 50% 60%;
+    /* Custom Linéa tokens - tons naturels */
+    --linea-cream: 40 35% 95%;
+    --linea-sand: 35 30% 88%;
+    --linea-linen: 30 25% 92%;
+    --linea-ivory: 45 40% 97%;
+    --linea-warm-brown: 25 35% 45%;
+    --linea-soft-brown: 25 25% 55%;
+    --linea-warm-gray: 30 10% 50%;
     
-    /* Gradients */
-    --gradient-warm: linear-gradient(135deg, hsl(40 30% 98%) 0%, hsl(270 35% 97%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(40 25% 97%) 100%);
-    --gradient-primary: linear-gradient(135deg, hsl(270 40% 60%) 0%, hsl(300 35% 65%) 100%);
+    /* Legacy colors for compatibility */
+    --linea-lavender: 25 35% 45%;
+    --linea-lavender-soft: 35 25% 92%;
+    --linea-rose: 15 35% 55%;
+    --linea-sage: 120 15% 50%;
+    --linea-amber: 35 60% 50%;
+    --linea-sky: 200 30% 55%;
     
-    /* Shadows */
-    --shadow-soft: 0 4px 20px -4px hsl(270 30% 50% / 0.1);
-    --shadow-card: 0 8px 32px -8px hsl(270 30% 50% / 0.12);
-    --shadow-elevated: 0 16px 48px -12px hsl(270 30% 50% / 0.15);
+    /* Gradients - doux et subtils */
+    --gradient-warm: linear-gradient(135deg, hsl(35 30% 96%) 0%, hsl(40 35% 95%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(40 35% 97%) 0%, hsl(35 25% 94%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(25 35% 45%) 0%, hsl(30 30% 50%) 100%);
+    
+    /* Shadows - très discrets */
+    --shadow-soft: 0 4px 20px -4px hsl(25 20% 30% / 0.08);
+    --shadow-card: 0 8px 32px -8px hsl(25 20% 30% / 0.1);
+    --shadow-elevated: 0 16px 48px -12px hsl(25 20% 30% / 0.12);
 
     /* Typography */
-    --font-display: 'Playfair Display', Georgia, serif;
-    --font-body: 'Inter', -apple-system, sans-serif;
+    --font-display: 'Nunito', -apple-system, sans-serif;
+    --font-body: 'Nunito', -apple-system, sans-serif;
 
-    /* Sidebar (keeping for compatibility) */
-    --sidebar-background: 40 30% 98%;
-    --sidebar-foreground: 25 20% 25%;
-    --sidebar-primary: 270 40% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 270 35% 95%;
-    --sidebar-accent-foreground: 270 40% 40%;
-    --sidebar-border: 40 20% 88%;
-    --sidebar-ring: 270 40% 60%;
+    /* Sidebar */
+    --sidebar-background: 35 30% 96%;
+    --sidebar-foreground: 25 25% 25%;
+    --sidebar-primary: 25 35% 45%;
+    --sidebar-primary-foreground: 35 30% 97%;
+    --sidebar-accent: 35 25% 92%;
+    --sidebar-accent-foreground: 25 35% 35%;
+    --sidebar-border: 35 20% 85%;
+    --sidebar-ring: 25 35% 45%;
   }
 
   .dark {
-    --background: 25 20% 8%;
-    --foreground: 40 20% 95%;
+    --background: 25 20% 10%;
+    --foreground: 35 25% 92%;
 
-    --card: 25 18% 12%;
-    --card-foreground: 40 20% 95%;
+    --card: 25 18% 14%;
+    --card-foreground: 35 25% 92%;
 
-    --popover: 25 18% 10%;
-    --popover-foreground: 40 20% 95%;
+    --popover: 25 18% 12%;
+    --popover-foreground: 35 25% 92%;
 
-    --primary: 270 45% 65%;
-    --primary-foreground: 25 20% 8%;
+    --primary: 30 40% 55%;
+    --primary-foreground: 25 20% 10%;
 
-    --secondary: 25 15% 18%;
-    --secondary-foreground: 40 20% 90%;
+    --secondary: 25 15% 20%;
+    --secondary-foreground: 35 25% 88%;
 
-    --muted: 25 15% 20%;
-    --muted-foreground: 40 15% 60%;
+    --muted: 25 15% 22%;
+    --muted-foreground: 35 15% 55%;
 
-    --accent: 270 30% 20%;
-    --accent-foreground: 270 45% 75%;
+    --accent: 30 20% 22%;
+    --accent-foreground: 30 40% 65%;
 
-    --destructive: 0 55% 45%;
+    --destructive: 0 50% 45%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 25 15% 20%;
-    --input: 25 15% 22%;
-    --ring: 270 45% 65%;
+    --border: 25 15% 22%;
+    --input: 25 15% 24%;
+    --ring: 30 40% 55%;
 
-    --linea-cream: 25 20% 12%;
-    --linea-lavender: 270 45% 65%;
-    --linea-lavender-soft: 270 25% 18%;
+    --linea-cream: 25 20% 14%;
+    --linea-sand: 25 18% 18%;
+    --linea-linen: 25 15% 16%;
+    --linea-lavender: 30 40% 55%;
+    --linea-lavender-soft: 30 20% 20%;
 
-    --sidebar-background: 25 20% 8%;
-    --sidebar-foreground: 40 20% 90%;
-    --sidebar-primary: 270 45% 65%;
-    --sidebar-primary-foreground: 25 20% 8%;
-    --sidebar-accent: 270 30% 20%;
-    --sidebar-accent-foreground: 270 45% 75%;
-    --sidebar-border: 25 15% 20%;
-    --sidebar-ring: 270 45% 65%;
+    --sidebar-background: 25 20% 10%;
+    --sidebar-foreground: 35 25% 88%;
+    --sidebar-primary: 30 40% 55%;
+    --sidebar-primary-foreground: 25 20% 10%;
+    --sidebar-accent: 30 20% 22%;
+    --sidebar-accent-foreground: 30 40% 65%;
+    --sidebar-border: 25 15% 22%;
+    --sidebar-ring: 30 40% 55%;
   }
 }
 

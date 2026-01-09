@@ -14,9 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Sora', 'system-ui', 'sans-serif'],
-        body: ['Plus Jakarta Sans', '-apple-system', 'sans-serif'],
-        sans: ['Plus Jakarta Sans', '-apple-system', 'sans-serif'],
+        display: ['Nunito', '-apple-system', 'sans-serif'],
+        body: ['Nunito', '-apple-system', 'sans-serif'],
+        sans: ['Nunito', '-apple-system', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
