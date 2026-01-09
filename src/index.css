@@ -8,64 +8,64 @@
 
 @layer base {
   :root {
-    /* Warm beige palette - sable, lin, ivoire */
-    --background: 35 30% 96%;
-    --foreground: 25 25% 18%;
+    /* Soft beige palette - plus doux, plus clair */
+    --background: 40 25% 97%;
+    --foreground: 30 15% 25%;
 
-    --card: 35 25% 94%;
-    --card-foreground: 25 25% 18%;
+    --card: 42 30% 96%;
+    --card-foreground: 30 15% 25%;
 
-    --popover: 35 30% 97%;
-    --popover-foreground: 25 25% 18%;
+    --popover: 45 35% 98%;
+    --popover-foreground: 30 15% 25%;
 
-    /* Warm brown accent - discret, naturel */
-    --primary: 25 35% 45%;
-    --primary-foreground: 35 30% 97%;
+    /* Soft taupe accent - très doux */
+    --primary: 30 20% 50%;
+    --primary-foreground: 45 35% 98%;
 
-    --secondary: 35 20% 90%;
-    --secondary-foreground: 25 25% 25%;
+    --secondary: 40 20% 93%;
+    --secondary-foreground: 30 15% 30%;
 
-    --muted: 35 15% 88%;
-    --muted-foreground: 25 15% 45%;
+    --muted: 42 18% 91%;
+    --muted-foreground: 30 10% 50%;
 
-    --accent: 35 25% 92%;
-    --accent-foreground: 25 35% 35%;
+    --accent: 40 22% 94%;
+    --accent-foreground: 30 20% 40%;
 
-    --destructive: 0 55% 50%;
+    --destructive: 0 50% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 35 20% 85%;
-    --input: 35 20% 88%;
-    --ring: 25 35% 45%;
+    --border: 40 18% 88%;
+    --input: 42 20% 91%;
+    --ring: 30 20% 50%;
 
     --radius: 1rem;
 
-    /* Custom Linéa tokens - tons naturels */
-    --linea-cream: 40 35% 95%;
-    --linea-sand: 35 30% 88%;
-    --linea-linen: 30 25% 92%;
-    --linea-ivory: 45 40% 97%;
-    --linea-warm-brown: 25 35% 45%;
-    --linea-soft-brown: 25 25% 55%;
-    --linea-warm-gray: 30 10% 50%;
+    /* Custom Linéa tokens - tons très doux */
+    --linea-cream: 45 30% 97%;
+    --linea-sand: 40 22% 91%;
+    --linea-linen: 38 20% 94%;
+    --linea-ivory: 48 35% 98%;
+    --linea-warm-brown: 30 20% 50%;
+    --linea-soft-brown: 30 15% 60%;
+    --linea-warm-gray: 35 8% 55%;
     
     /* Legacy colors for compatibility */
-    --linea-lavender: 25 35% 45%;
-    --linea-lavender-soft: 35 25% 92%;
-    --linea-rose: 15 35% 55%;
-    --linea-sage: 120 15% 50%;
-    --linea-amber: 35 60% 50%;
-    --linea-sky: 200 30% 55%;
+    --linea-lavender: 30 20% 50%;
+    --linea-lavender-soft: 40 22% 94%;
+    --linea-rose: 15 30% 60%;
+    --linea-sage: 120 12% 55%;
+    --linea-amber: 40 50% 55%;
+    --linea-sky: 200 25% 60%;
     
-    /* Gradients - doux et subtils */
-    --gradient-warm: linear-gradient(135deg, hsl(35 30% 96%) 0%, hsl(40 35% 95%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(40 35% 97%) 0%, hsl(35 25% 94%) 100%);
-    --gradient-primary: linear-gradient(135deg, hsl(25 35% 45%) 0%, hsl(30 30% 50%) 100%);
+    /* Gradients - ultra doux */
+    --gradient-warm: linear-gradient(135deg, hsl(40 25% 97%) 0%, hsl(45 30% 97%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(45 35% 98%) 0%, hsl(42 30% 96%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(30 20% 50%) 0%, hsl(35 18% 55%) 100%);
     
-    /* Shadows - très discrets */
-    --shadow-soft: 0 4px 20px -4px hsl(25 20% 30% / 0.08);
-    --shadow-card: 0 8px 32px -8px hsl(25 20% 30% / 0.1);
-    --shadow-elevated: 0 16px 48px -12px hsl(25 20% 30% / 0.12);
+    /* Shadows - très légers */
+    --shadow-soft: 0 4px 20px -4px hsl(30 15% 40% / 0.06);
+    --shadow-card: 0 8px 32px -8px hsl(30 15% 40% / 0.08);
+    --shadow-elevated: 0 16px 48px -12px hsl(30 15% 40% / 0.1);
 
     /* Typography */
     --font-display: 'Nunito', -apple-system, sans-serif;
