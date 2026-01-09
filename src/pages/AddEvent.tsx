@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar } from 'lucide-react';
+import { ArrowLeft, Camera, Upload, X, Loader2 } from 'lucide-react';
 import { LineaButton } from '@/components/ui/linea-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useApp } from '@/context/AppContext';
-import { EventCategory, categoryLabels } from '@/types/linea';
+import { EventCategory, categoryLabels, Media } from '@/types/linea';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const AddEvent = () => {
   const navigate = useNavigate();
@@ -20,21 +22,81 @@ const AddEvent = () => {
   const [category, setCategory] = useState<EventCategory>('personnel');
   const [description, setDescription] = useState('');
   const [step, setStep] = useState<'details' | 'media'>('details');
+  const [uploadedMedia, setUploadedMedia] = useState<{ url: string; type: 'photo' | 'video' | 'audio' }[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const categories: EventCategory[] = ['famille', 'travail', 'voyage', 'personnel', 'autre'];
+
+  const uploadFile = async (file: File): Promise<string | null> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${crypto.randomUUID()}.${fileExt}`;
+    const filePath = `photos/${fileName}`;
+
+    const { error } = await supabase.storage
+      .from('event-media')
+      .upload(filePath, file);
+
+    if (error) {
+      console.error('Upload error:', error);
+      toast.error('Erreur lors du téléversement');
+      return null;
+    }
+
+    const { data } = supabase.storage
+      .from('event-media')
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    
+    for (const file of Array.from(files)) {
+      const url = await uploadFile(file);
+      if (url) {
+        const type = file.type.startsWith('video/') ? 'video' : 
+                     file.type.startsWith('audio/') ? 'audio' : 'photo';
+        setUploadedMedia(prev => [...prev, { url, type }]);
+        toast.success('Photo ajoutée !');
+      }
+    }
+    
+    setIsUploading(false);
+    e.target.value = '';
+  };
+
+  const removeMedia = (index: number) => {
+    setUploadedMedia(prev => prev.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = (skipMedia: boolean = false) => {
     if (!title || !startDate) return;
 
+    const eventId = crypto.randomUUID();
+    const media: Media[] = uploadedMedia.map((m, index) => ({
+      id: `${eventId}-media-${index}`,
+      eventId,
+      type: m.type,
+      fileUrl: m.url,
+      createdAt: new Date(),
+    }));
+
     const newEvent = {
-      id: crypto.randomUUID(),
+      id: eventId,
       title,
       startDate: new Date(startDate),
       endDate: isPeriod && endDate ? new Date(endDate) : undefined,
       category,
       description: description || undefined,
       createdAt: new Date(),
-      media: [],
+      media: skipMedia ? [] : media,
     };
 
     addEvent(newEvent);
@@ -76,19 +138,84 @@ const AddEvent = () => {
               Ajoutez seulement ce qui compte pour vous.
             </p>
 
+            {/* Uploaded photos preview */}
+            {uploadedMedia.length > 0 && (
+              <div className="grid grid-cols-3 gap-3">
+                {uploadedMedia.map((media, index) => (
+                  <motion.div
+                    key={index}
+                    className="relative aspect-square rounded-xl overflow-hidden"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                  >
+                    <img
+                      src={media.url}
+                      alt="Uploaded"
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      onClick={() => removeMedia(index)}
+                      className="absolute top-2 right-2 w-6 h-6 bg-background/80 rounded-full flex items-center justify-center"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {/* Hidden file inputs */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileSelect}
+              className="hidden"
+            />
+            <input
+              ref={cameraInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handleFileSelect}
+              className="hidden"
+            />
+
             {/* Media options */}
             <div className="grid gap-4">
               <motion.button
-                className="w-full p-6 rounded-2xl border-2 border-dashed border-border hover:border-primary/40 hover:bg-accent/30 transition-all flex flex-col items-center gap-3"
+                type="button"
+                onClick={() => cameraInputRef.current?.click()}
+                disabled={isUploading}
+                className="w-full p-6 rounded-2xl border-2 border-dashed border-border hover:border-primary/40 hover:bg-accent/30 transition-all flex flex-col items-center gap-3 disabled:opacity-50"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
                 <div className="w-14 h-14 rounded-full bg-linea-lavender-soft flex items-center justify-center">
-                  <svg className="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
+                  <Camera className="w-7 h-7 text-primary" />
                 </div>
-                <span className="font-medium text-foreground">Ajouter une photo</span>
+                <span className="font-medium text-foreground">Prendre une photo</span>
+              </motion.button>
+
+              <motion.button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+                className="w-full p-6 rounded-2xl border-2 border-dashed border-border hover:border-primary/40 hover:bg-accent/30 transition-all flex flex-col items-center gap-3 disabled:opacity-50"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="w-14 h-14 rounded-full bg-linea-lavender-soft flex items-center justify-center">
+                  {isUploading ? (
+                    <Loader2 className="w-7 h-7 text-primary animate-spin" />
+                  ) : (
+                    <Upload className="w-7 h-7 text-primary" />
+                  )}
+                </div>
+                <span className="font-medium text-foreground">
+                  {isUploading ? 'Téléversement...' : 'Téléverser une photo'}
+                </span>
               </motion.button>
 
               <motion.button
@@ -127,8 +254,12 @@ const AddEvent = () => {
                 size="lg"
                 onClick={() => handleSubmit(false)}
                 className="w-full"
+                disabled={isUploading}
               >
-                Ajouter à ma frise
+                {uploadedMedia.length > 0 
+                  ? `Ajouter avec ${uploadedMedia.length} photo${uploadedMedia.length > 1 ? 's' : ''}`
+                  : 'Ajouter à ma frise'
+                }
               </LineaButton>
               
               <LineaButton
@@ -136,6 +267,7 @@ const AddEvent = () => {
                 size="lg"
                 onClick={() => handleSubmit(true)}
                 className="w-full"
+                disabled={isUploading}
               >
                 Continuer sans média
               </LineaButton>
