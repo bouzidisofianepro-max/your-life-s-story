@@ -57,15 +57,18 @@
     --linea-amber: 30 50% 55%;
     --linea-sky: 200 20% 60%;
     
-    /* Gradients - latté style */
-    --gradient-warm: linear-gradient(135deg, hsl(30 30% 96%) 0%, hsl(35 35% 95%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(35 40% 97%) 0%, hsl(35 35% 95%) 100%);
+    /* Gradients - premium latté style */
+    --gradient-warm: linear-gradient(135deg, hsl(30 30% 96%) 0%, hsl(35 35% 95%) 50%, hsl(28 28% 94%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(35 40% 98%) 0%, hsl(35 35% 95%) 100%);
     --gradient-primary: linear-gradient(135deg, hsl(25 35% 55%) 0%, hsl(28 30% 60%) 100%);
+    --gradient-premium: linear-gradient(135deg, hsl(30 30% 96%) 0%, hsl(35 35% 95%) 25%, hsl(32 28% 93%) 50%, hsl(35 35% 95%) 75%, hsl(30 30% 96%) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(35 40% 98% / 0.8) 0%, hsl(35 35% 96% / 0.6) 100%);
     
-    /* Shadows - warm and soft */
+    /* Shadows - warm and luxurious */
     --shadow-soft: 0 4px 20px -4px hsl(25 25% 40% / 0.06);
-    --shadow-card: 0 8px 32px -8px hsl(25 25% 40% / 0.08);
-    --shadow-elevated: 0 16px 48px -12px hsl(25 25% 40% / 0.1);
+    --shadow-card: 0 8px 32px -8px hsl(25 25% 40% / 0.08), 0 2px 8px -2px hsl(25 25% 40% / 0.04);
+    --shadow-elevated: 0 20px 50px -12px hsl(25 25% 40% / 0.15), 0 8px 20px -8px hsl(25 25% 40% / 0.08);
+    --shadow-glow: 0 0 40px -10px hsl(25 35% 55% / 0.2);
 
     /* Typography */
     --font-display: 'Nunito', -apple-system, sans-serif;
@@ -164,6 +167,14 @@
     background: var(--gradient-primary);
   }
 
+  .gradient-premium {
+    background: var(--gradient-premium);
+  }
+
+  .gradient-glass {
+    background: var(--gradient-glass);
+  }
+
   .shadow-soft {
     box-shadow: var(--shadow-soft);
   }
@@ -176,7 +187,53 @@
     box-shadow: var(--shadow-elevated);
   }
 
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Premium glass effect */
+  .glass {
+    background: hsl(35 40% 98% / 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsl(30 22% 85% / 0.5);
+  }
+
+  .glass-strong {
+    background: hsl(35 40% 98% / 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid hsl(30 22% 85% / 0.6);
+  }
+
+  /* Texture overlay */
+  .texture-noise {
+    position: relative;
+  }
+
+  .texture-noise::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.015;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Premium card styles */
+  .card-premium {
+    background: var(--gradient-card);
+    border: 1px solid hsl(30 22% 88% / 0.6);
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-premium:hover {
+    box-shadow: var(--shadow-elevated);
+    border-color: hsl(25 35% 55% / 0.2);
   }
 }
