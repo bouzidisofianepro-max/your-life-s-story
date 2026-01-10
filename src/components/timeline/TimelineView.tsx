@@ -43,35 +43,35 @@ const EventCard = ({
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const colors = categoryColors[event.category];
-  const [dragDirection, setDragDirection] = useState<'left' | 'right' | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
-  const handleDragEnd = useCallback((event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    const threshold = 100;
-    const velocity = 500;
+  const handleDragEnd = useCallback((_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    setIsDragging(false);
+    const threshold = 50; // Seuil réduit pour faciliter le swipe
+    const velocityThreshold = 300;
     
-    if (info.offset.x > threshold || info.velocity.x > velocity) {
+    if (info.offset.x > threshold || info.velocity.x > velocityThreshold) {
       // Swipe right - go to previous
       if (hasPrevious && onSwipeRight) {
         onSwipeRight();
       }
-    } else if (info.offset.x < -threshold || info.velocity.x < -velocity) {
+    } else if (info.offset.x < -threshold || info.velocity.x < -velocityThreshold) {
       // Swipe left - go to next
       if (hasNext && onSwipeLeft) {
         onSwipeLeft();
       }
     }
-    setDragDirection(null);
   }, [hasPrevious, hasNext, onSwipeLeft, onSwipeRight]);
 
-  const handleDrag = useCallback((event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    if (info.offset.x > 30) {
-      setDragDirection('right');
-    } else if (info.offset.x < -30) {
-      setDragDirection('left');
-    } else {
-      setDragDirection(null);
-    }
+  const handleDragStart = useCallback(() => {
+    setIsDragging(true);
   }, []);
+
+  const handleClick = useCallback(() => {
+    if (!isDragging) {
+      onClick();
+    }
+  }, [isDragging, onClick]);
 
   return (
     <motion.div
@@ -85,43 +85,49 @@ const EventCard = ({
         ease: [0.22, 1, 0.36, 1]
       }}
     >
-      {/* Swipe indicators */}
+      {/* Navigation buttons for desktop */}
       <AnimatePresence>
-        {dragDirection === 'right' && hasPrevious && (
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10"
+        {hasPrevious && (
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSwipeRight?.();
+            }}
+            className="absolute -left-2 top-1/2 -translate-y-1/2 -translate-x-full z-10 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border shadow-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary/10 hover:border-primary/30"
+            aria-label="Événement précédent"
           >
-            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-              <ChevronLeft className="w-5 h-5 text-primary" />
-            </div>
-          </motion.div>
+            <ChevronLeft className="w-4 h-4 text-muted-foreground" />
+          </motion.button>
         )}
-        {dragDirection === 'left' && hasNext && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10"
+        {hasNext && (
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSwipeLeft?.();
+            }}
+            className="absolute -right-2 top-1/2 -translate-y-1/2 translate-x-full z-10 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border shadow-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary/10 hover:border-primary/30"
+            aria-label="Événement suivant"
           >
-            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-              <ChevronRight className="w-5 h-5 text-primary" />
-            </div>
-          </motion.div>
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          </motion.button>
         )}
       </AnimatePresence>
 
-      <motion.button
-        onClick={onClick}
-        className="w-full text-left cursor-grab active:cursor-grabbing"
+      <motion.div
+        className="w-full text-left cursor-grab active:cursor-grabbing touch-pan-y"
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.2}
-        onDrag={handleDrag}
+        dragElastic={0.3}
+        onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
-        whileTap={{ scale: 0.995 }}
+        whileDrag={{ scale: 0.98 }}
+        onClick={handleClick}
       >
         <div className="relative">
           {/* Connection line & dot */}
@@ -134,12 +140,12 @@ const EventCard = ({
           />
           
           {/* Event card */}
-          <div className={`relative overflow-hidden rounded-2xl bg-card/80 backdrop-blur-sm p-5 shadow-soft border ${colors.border} group-hover:shadow-card group-hover:border-primary/30 transition-all duration-300`}>
+          <div className={`relative overflow-hidden rounded-2xl bg-card/80 backdrop-blur-sm p-5 shadow-soft border ${colors.border} group-hover:shadow-card group-hover:border-primary/30 transition-all duration-300 select-none`}>
             {/* Subtle gradient overlay */}
             <div className={`absolute inset-0 opacity-30 ${colors.bg}`} />
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-primary/5 to-transparent rounded-bl-full" />
             
-            <div className="relative">
+            <div className="relative pointer-events-none">
               {/* Header with category */}
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div className="flex-1 min-w-0">
@@ -210,16 +216,16 @@ const EventCard = ({
                 </div>
               )}
 
-              {/* Swipe hint */}
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-50 transition-opacity">
-                <ChevronLeft className="w-3 h-3 text-muted-foreground" />
-                <span className="text-[10px] text-muted-foreground">swipe</span>
-                <ChevronRight className="w-3 h-3 text-muted-foreground" />
+              {/* Swipe hint - visible on mobile */}
+              <div className="flex items-center justify-center gap-1 mt-3 md:hidden">
+                <ChevronLeft className="w-3 h-3 text-muted-foreground/40" />
+                <span className="text-[10px] text-muted-foreground/40">glisser pour naviguer</span>
+                <ChevronRight className="w-3 h-3 text-muted-foreground/40" />
               </div>
             </div>
           </div>
         </div>
-      </motion.button>
+      </motion.div>
     </motion.div>
   );
 };
