@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Settings, Pencil, ChevronDown } from 'lucide-react';
+import { Plus, Settings, Pencil, ChevronDown, ArrowLeft } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { LineaButton } from '@/components/ui/linea-button';
 import TimelineView from '@/components/timeline/TimelineView';
@@ -123,6 +123,14 @@ const Timeline = () => {
       >
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            <LineaButton
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/timelines')}
+              className="mr-1"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </LineaButton>
             <div className="w-11 h-11 rounded-2xl gradient-primary shadow-soft flex items-center justify-center">
               <svg
                 className="w-5 h-5 text-primary-foreground"

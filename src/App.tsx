@@ -8,6 +8,7 @@ import Splash from "./pages/Splash";
 import Onboarding from "./pages/Onboarding";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import Timelines from "./pages/Timelines";
 import Timeline from "./pages/Timeline";
 import AddEvent from "./pages/AddEvent";
 import EventDetail from "./pages/EventDetail";
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/timelines" element={<Timelines />} />
             <Route path="/timeline" element={<Timeline />} />
             <Route path="/add-event" element={<AddEvent />} />
             <Route path="/event/:id" element={<EventDetail />} />

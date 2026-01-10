@@ -19,6 +19,13 @@ export interface Media {
   createdAt: Date;
 }
 
+export interface Timeline {
+  id: string;
+  name: string;
+  events: TimelineEvent[];
+  createdAt: Date;
+}
+
 export interface User {
   id: string;
   email: string;
