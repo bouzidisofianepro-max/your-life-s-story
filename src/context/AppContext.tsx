@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { TimelineEvent, Timeline, User } from '@/types/linea';
+import { TimelineEvent, Timeline, User, Media } from '@/types/linea';
 
 interface AppContextType {
   user: User | null;
@@ -12,6 +12,7 @@ interface AppContextType {
   addEvent: (event: TimelineEvent) => void;
   updateEvent: (event: TimelineEvent) => void;
   deleteEvent: (id: string) => void;
+  addMediaToEvent: (eventId: string, media: Media) => void;
   isOnboarded: boolean;
   setIsOnboarded: (value: boolean) => void;
   timelineName: string;
@@ -188,6 +189,26 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const addMediaToEvent = (eventId: string, media: Media) => {
+    setTimelines(prev => prev.map(t => {
+      if (t.id === currentTimelineId) {
+        return {
+          ...t,
+          events: t.events.map(e => {
+            if (e.id === eventId) {
+              return {
+                ...e,
+                media: [...(e.media || []), media]
+              };
+            }
+            return e;
+          })
+        };
+      }
+      return t;
+    }));
+  };
+
   const addTimeline = (name: string) => {
     const newTimeline: Timeline = {
       id: `timeline-${Date.now()}`,
@@ -222,6 +243,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         addEvent,
         updateEvent,
         deleteEvent,
+        addMediaToEvent,
         isOnboarded,
         setIsOnboarded,
         timelineName,
