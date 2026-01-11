@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
@@ -7,6 +8,7 @@ import { useApp } from '@/context/AppContext';
 import { LineaButton } from '@/components/ui/linea-button';
 import { categoryLabels, categoryColors, Media, EventCategory } from '@/types/linea';
 import { AddSouvenirDialog } from '@/components/AddSouvenirDialog';
+import { MediaViewer } from '@/components/MediaViewer';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,8 +34,15 @@ const EventDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { events, deleteEvent, addMediaToEvent } = useApp();
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerIndex, setViewerIndex] = useState(0);
 
   const event = events.find((e) => e.id === id);
+
+  const openMediaViewer = (index: number) => {
+    setViewerIndex(index);
+    setViewerOpen(true);
+  };
 
   if (!event) {
     return (
@@ -253,6 +262,7 @@ const EventDetail = () => {
                         className="group relative aspect-square rounded-2xl overflow-hidden bg-muted cursor-pointer"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
+                        onClick={() => openMediaViewer(index)}
                       >
                         {media.type === 'photo' ? (
                           <img
@@ -311,6 +321,16 @@ const EventDetail = () => {
           </motion.div>
         </div>
       </main>
+
+      {/* Media Viewer */}
+      {hasMedia && (
+        <MediaViewer
+          media={event.media!}
+          initialIndex={viewerIndex}
+          isOpen={viewerOpen}
+          onClose={() => setViewerOpen(false)}
+        />
+      )}
     </div>
   );
 };
