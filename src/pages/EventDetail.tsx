@@ -5,7 +5,8 @@ import { fr } from 'date-fns/locale';
 import { ArrowLeft, Edit, Trash2, Plus } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { LineaButton } from '@/components/ui/linea-button';
-import { categoryLabels, categoryColors } from '@/types/linea';
+import { categoryLabels, categoryColors, Media } from '@/types/linea';
+import { AddSouvenirDialog } from '@/components/AddSouvenirDialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,7 +23,7 @@ import { toast } from 'sonner';
 const EventDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { events, deleteEvent } = useApp();
+  const { events, deleteEvent, addMediaToEvent } = useApp();
 
   const event = events.find((e) => e.id === id);
 
@@ -45,6 +46,10 @@ const EventDetail = () => {
     deleteEvent(event.id);
     toast.success('Événement supprimé');
     navigate('/timeline');
+  };
+
+  const handleAddMedia = (media: Media) => {
+    addMediaToEvent(event.id, media);
   };
 
   return (
@@ -139,10 +144,7 @@ const EventDetail = () => {
               <h3 className="font-display text-lg font-medium text-foreground">
                 Souvenirs
               </h3>
-              <LineaButton variant="ghost" size="sm" className="gap-2">
-                <Plus className="w-4 h-4" />
-                Ajouter
-              </LineaButton>
+              <AddSouvenirDialog eventId={event.id} onAddMedia={handleAddMedia} />
             </div>
 
             {event.media && event.media.length > 0 ? (
@@ -182,9 +184,15 @@ const EventDetail = () => {
                 <p className="text-muted-foreground mb-4">
                   Aucun souvenir ajouté à cet événement
                 </p>
-                <LineaButton variant="soft" size="sm">
-                  Ajouter un souvenir
-                </LineaButton>
+                <AddSouvenirDialog
+                  eventId={event.id}
+                  onAddMedia={handleAddMedia}
+                  trigger={
+                    <LineaButton variant="soft" size="sm">
+                      Ajouter un souvenir
+                    </LineaButton>
+                  }
+                />
               </div>
             )}
           </div>
