@@ -66,27 +66,6 @@ const Login = () => {
         transition={{ duration: 0.6 }}
       >
         <div className="text-center mb-10">
-          <motion.div
-            className="w-20 h-20 mx-auto mb-6 rounded-3xl gradient-primary shadow-elevated flex items-center justify-center relative"
-            initial={{ scale: 0.8, rotate: -10 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.5, delay: 0.2, type: "spring" }}
-          >
-            <div className="absolute inset-0 rounded-3xl bg-primary/20 blur-xl" />
-            <svg
-              className="w-10 h-10 text-primary-foreground relative z-10"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </motion.div>
           <h1 className="font-display text-3xl font-semibold text-foreground mb-3">
             Bon retour
           </h1>
